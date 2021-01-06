@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import moviesRouter from './api/movies';
-import usersRouter from './api/users';
-import genresRouter from './api/genres'
 import bodyParser from 'body-parser';
-import './db';
-import {loadUsers} from './seedData'
+import './db';  
+import usersRouter from './api/users';
+import genresRouter from './api/genres';
 import session from 'express-session';
 import passport from './authenticate';
+import {loadUsers, loadMovies} from './seedData';
+
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const port = process.env.PORT;
 
 if (process.env.SEED_DB) {
   loadUsers();
+  loadMovies();
 }
 
 const errHandler = (err, req, res, next) => {
@@ -30,6 +32,7 @@ const errHandler = (err, req, res, next) => {
 //configure body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+
 app.use(session({
   secret: 'ilikecake',
   resave: true,
@@ -37,11 +40,12 @@ app.use(session({
 }));
 
 app.use(express.static('public'));
-app.use(passport.initialize());​
-app.use('/api/movies', authenticate, moviesRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/genres', genresRouter);
+// initialise passport​
+app.use(passport.initialize());
+// Add passport.authenticate(..)  to middleware stack for protected routes​
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/genres', genresRouter)  
 app.use(errHandler);
 
 app.listen(port, () => {
