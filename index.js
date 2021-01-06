@@ -12,7 +12,7 @@ import {loadUsers, loadMovies, loadUpcomingMovies, loadNowplayingMovies} from '.
 import usersRouter from './api/users';
 import upcomingRouter from './api/upcomingMovies';
 import nowplayingRouter from './api/nowplayingMovies';
-
+import peopleRouter from './api/people';
 dotenv.config();
 
 if (process.env.NODE_ENV === 'test') {
@@ -26,15 +26,9 @@ if (process.env.SEED_DB === 'true') {
   loadUsers();
   loadUpcomingMovies();
   loadNowplayingMovies();
+  loadPeople();
 }
-const app = express();
 
-const port = process.env.PORT;
-
-if (process.env.SEED_DB) {
-  loadUsers();
-  loadMovies();
-}
 
 const errHandler = (err, req, res, next) => {
   /* if the error in development then send stack trace to display whole error,
@@ -45,10 +39,9 @@ const errHandler = (err, req, res, next) => {
   res.status(500).send(`Hey!! You caught the error 👍👍, ${err.stack} `);
 };
 
-app.use(passport.initialize());
-//configure body-parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+const app = express();
+
+const port = process.env.PORT;
 
 app.use(session({
   secret: 'ilikecake',
@@ -56,6 +49,10 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.use(passport.initialize());
+//configure body-parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 app.use(express.static('public'));
 // initialise passport​
 app.use(passport.initialize());
@@ -64,12 +61,12 @@ app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRou
 app.use('/api/upcomingMovies',passport.authenticate('jwt', {session: false}), upcomingRouter);
 app.use('/api/nowplayingMovies', passport.authenticate('jwt', {session: false}), nowplayingRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/genres', genresRouter) 
-
+app.use('/api/genres', genresRouter);
+app.use('/api/people',passport.authenticate('jwt', {session: false}), peopleRouter);
 app.use(errHandler);
 
-app.listen(port, () => {
-  console.info(`Server running at ${port}`);
+let server = app.listen(port, () => {
+  loglevel.info(`Server running at ${port}`);
 });
 
-export default app;
+module.exports = server

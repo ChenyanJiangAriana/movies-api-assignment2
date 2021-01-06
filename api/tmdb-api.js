@@ -51,3 +51,17 @@ export const getNowPlayingMovies = () =>{
 }
 
 
+export const getActors = () =>{
+  return fetch(
+    `https://api.themoviedb.org/3/person/popular?api_key=${process.env.TMDB_KEY}&language=en-US`
+  )
+  .then(res => res.json())
+    .then(json => json.results);
+};
+
+export const getActor = actorid =>{
+  return fetch(
+  `https://api.themoviedb.org/3/person/${actorid}?api_key=${process.env.TMDB_KEY}&language=en-US`
+  )
+  .then(res => res.json())
+};
