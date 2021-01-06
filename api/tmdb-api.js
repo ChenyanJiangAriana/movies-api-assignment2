@@ -33,3 +33,13 @@ export const getMovies = () => {
       .then(json => json.results);
   };
 
+  
+export const getUpcomingMovies = () =>{
+  return fetch(
+    `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
+  )
+    .then(res => res.json())
+    .then(json => json.results);
+};
+
+
