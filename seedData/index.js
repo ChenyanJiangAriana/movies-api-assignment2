@@ -36,4 +36,42 @@ export async function loadUsers() {
       console.error(`failed to Load movie Data: ${err}`);
     }
   } 
+  export async function loadUpcomingMovies() {
+    console.log('load upcomingmovies');
+    try {
+      getUpcomingMovies().then(async res => {
+        await upcomingModel.deleteMany();
+        await upcomingModel.collection.insertMany(res);
+        console.info(`${res.length} Upcomingmovies were successfully stored.`);
+      })
+    } catch (err) {
+      console.error(`failed to Load upcomingmovie Data: ${err}`);
+    }
+  }
+  
+  export async function loadNowplayingMovies() {
+    console.log('load nowplayingmovies');
+    try {
+      getNowPlayingMovies().then(async res => {
+        await nowplayingModel.deleteMany();
+        await nowplayingModel.collection.insertMany(res);
+        console.info(`${res.length} Nowplayingmovies were successfully stored.`);
+      })
+    } catch (err) {
+      console.error(`failed to Load nowplayingmovie Data: ${err}`);
+    }
+  }
+  
+  export async function loadPeople() {
+    console.log('load nowplayingmovies');
+    try {
+      getActors().then(async res => {
+        await peopleModel.deleteMany();
+        await peopleModel.collection.insertMany(res);
+        console.info(`${res.length} actors were successfully stored.`);
+      })
+    } catch (err) {
+      console.error(`failed to Load actor Data: ${err}`);
+    }
+  }
 

@@ -8,8 +8,7 @@ import genresRouter from './api/genres';
 import session from 'express-session';
 import passport from './authenticate';
 import loglevel from 'loglevel';
-import {loadUsers, loadMovies, loadUpcomingMovies, loadNowplayingMovies} from './seedData';
-import usersRouter from './api/users';
+import {loadUsers, loadMovies, loadUpcomingMovies, loadNowplayingMovies, loadPeople} from './seedData';
 import upcomingRouter from './api/upcomingMovies';
 import nowplayingRouter from './api/nowplayingMovies';
 import peopleRouter from './api/people';
@@ -43,11 +42,11 @@ const app = express();
 
 const port = process.env.PORT;
 
-app.use(session({
-  secret: 'ilikecake',
-  resave: true,
-  saveUninitialized: true
-}));
+// app.use(session({
+//   secret: 'ilikecake',
+//   resave: true,
+//   saveUninitialized: true
+// }));
 
 app.use(passport.initialize());
 //configure body-parser
