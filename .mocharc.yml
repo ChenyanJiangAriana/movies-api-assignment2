@@ -1,5 +1,7 @@
-spec:
-    - tests/functional/api/**/index.js
+file:
+    - 'tests/functional/api/movies/index.js'
+    - 'tests/functional/api/users/index.js'
+    - 'tests/functional/api/upcomingMovies/index.js' 
 require: '@babel/register'
 exit: true
 timeout: 4000
