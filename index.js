@@ -7,11 +7,26 @@ import usersRouter from './api/users';
 import genresRouter from './api/genres';
 import session from 'express-session';
 import passport from './authenticate';
-import {loadUsers, loadMovies} from './seedData';
-
+import loglevel from 'loglevel';
+import {loadUsers, loadMovies, loadUpcomingMovies, loadNowplayingMovies} from './seedData';
+import usersRouter from './api/users';
+import upcomingRouter from './api/upcomingMovies';
+import nowplayingRouter from './api/nowplayingMovies';
 
 dotenv.config();
 
+if (process.env.NODE_ENV === 'test') {
+  loglevel.setLevel('warn')
+} else {
+  loglevel.setLevel('info')
+}
+
+if (process.env.SEED_DB === 'true') {
+  loadMovies();
+  loadUsers();
+  loadUpcomingMovies();
+  loadNowplayingMovies();
+}
 const app = express();
 
 const port = process.env.PORT;
@@ -29,6 +44,8 @@ const errHandler = (err, req, res, next) => {
   }
   res.status(500).send(`Hey!! You caught the error 👍👍, ${err.stack} `);
 };
+
+app.use(passport.initialize());
 //configure body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -44,8 +61,11 @@ app.use(express.static('public'));
 app.use(passport.initialize());
 // Add passport.authenticate(..)  to middleware stack for protected routes​
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+app.use('/api/upcomingMovies',passport.authenticate('jwt', {session: false}), upcomingRouter);
+app.use('/api/nowplayingMovies', passport.authenticate('jwt', {session: false}), nowplayingRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/genres', genresRouter)  
+app.use('/api/genres', genresRouter) 
+
 app.use(errHandler);
 
 app.listen(port, () => {
