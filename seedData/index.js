@@ -1,6 +1,10 @@
 import userModel from '../api/users/userModel';
 import movieModel from '../api/movies/movieModel';
-import {movies} from './movies.js';
+import upcomingModel from '../api/upcomingMovies/upcomingModel';
+import nowplayingModel from '../api/nowplayingMovies/nowplayingModel';
+import peopleModel from '../api/people/peopleModel';
+import { movies } from './movies.js';
+import { getUpcomingMovies, getNowPlayingMovies, getActor, getActors } from '../api/tmdb-api';
 
 const users = [
   {

@@ -6,7 +6,6 @@ dotenv.config();
 // Connect to database
 mongoose.connect(process.env.mongoDB);
 const db = mongoose.connection;
-mongoose.set('useCreateIndex', true);
 
 db.on('error', (err) => {
     console.log(`database connection error: ${err}`);

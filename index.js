@@ -54,7 +54,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static('public'));
 // initialise passport​
-app.use(passport.initialize());
 // Add passport.authenticate(..)  to middleware stack for protected routes​
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
 app.use('/api/upcomingMovies',passport.authenticate('jwt', {session: false}), upcomingRouter);
