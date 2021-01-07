@@ -11,9 +11,9 @@ const upcomingMovie = {
     title: "Wonder Woman 1984"
 };
 
-describe("Movies endpoint", () => {
+describe("UpcomingMovies endpoint", () => {
     beforeEach(function (done) {
-        this.timeout(6000)
+        this.timeout(10000)
         try {
             api = require("../../../../index");
         } catch (err) {

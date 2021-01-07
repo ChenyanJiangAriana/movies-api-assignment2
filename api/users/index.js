@@ -1,13 +1,13 @@
 import express from 'express';
-import User from './userModel'
+import User from './userModel';
 import jwt from 'jsonwebtoken';
-import movieModel from '../movies/movieModel'
+import movieModel from '../movies/movieModel';
 
 const router = express.Router(); // eslint-disable-line
 
 // Get all users
-router.get('/', (req, res,next) => {
-    User.find().then(users => res.status(200).json(users)).catch(next);
+router.get('/', (req, res, next) => {
+  User.find().then(users => res.status(200).json(users)).catch(next);
 });
 
 // Register OR authenticate a user
@@ -26,7 +26,7 @@ router.post('/', async (req, res, next) => {
         code: 201,
         msg: 'Successful created new user.',
       });
-    }else{
+    } else {
       res.status(401).json({
         code: 401,
         msg: 'The password is too simple'
@@ -55,9 +55,9 @@ router.post('/', async (req, res, next) => {
 });
 
 // Update a user
-router.put('/:id',  (req, res,next) => {
+router.put('/:id', (req, res, next) => {
   if (req.body._id) delete req.body._id;
-   User.update({
+  User.update({
     _id: req.params.id,
   }, req.body, {
     upsert: false,
@@ -66,31 +66,34 @@ router.put('/:id',  (req, res,next) => {
 });
 
 //Add a favourite. No Error Handling Yet. Can add duplicates too!
+// eslint-disable-next-line no-unused-vars
+
 router.post('/:userName/favourites', async (req, res, next) => {
-  try{
-  const newFavourite = req.body.id;
-  const userName = req.params.userName;
-  const movie = await movieModel.findByMovieDBId(newFavourite);
-  const user = await User.findByUserName(userName);
- if(user.favourites.includes(movie._id)) {
-    res.status(401).json({
-      code: 401,
-      msg: 'The movie has appeared'
+  try {
+    const newFavourite = req.body.id;
+    const userName = req.params.userName;
+    const movie = await movieModel.findByMovieDBId(newFavourite);
+    const user = await User.findByUserName(userName);
+    if (user.favourites.includes(movie._id)) {
+      res.status(401).json({
+        code: 401,
+        msg: 'The movie has appeared'
       });
-  }
- else {
-  await user.favourites.push(movie._id);
-  await user.save();
-  res.status(201).json(user);
-}
-  }catch(error){
+    }
+    else {
+      await user.favourites.push(movie._id);
+      await user.save();
+      res.status(201).json(user);
+    }
+  } catch (error) {
     next(error);
-  } 
+  }
 });
+
 router.get('/:userName/favourites', (req, res, next) => {
   const userName = req.params.userName;
-    User.findByUserName(userName).populate('favourites').then(
-      user => res.status(201).json(user.favourites)
+  User.findByUserName(userName).populate('favourites').then(
+    user => res.status(201).json(user.favourites)
   ).catch(next);
 });
 
