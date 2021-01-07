@@ -42,11 +42,11 @@ const app = express();
 
 const port = process.env.PORT;
 
-// app.use(session({
-//   secret: 'ilikecake',
-//   resave: true,
-//   saveUninitialized: true
-// }));
+app.use(session({
+  secret: 'ilikecake',
+  resave: true,
+  saveUninitialized: true
+}));
 
 app.use(passport.initialize());
 //configure body-parser
