@@ -12,4 +12,13 @@ router.get('/:id', (req, res, next) => {
   peopleModel.findByMovieDBId(id).then(people => res.status(200).send(people)).catch(next);
 });
 
+// eslint-disable-next-line no-unused-vars
+router.get('/:id/movie_credits', (req, res, next) => {
+  const id = parseInt(req.params.id);
+  getPersonMovie_credits(id)
+  .then(credits => res.status(200).send(credits))
+  .catch((error) => next(error));
+});
+
+
 export default router;
