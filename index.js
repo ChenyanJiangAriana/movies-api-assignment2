@@ -59,12 +59,12 @@ app.use(bodyParser.urlencoded());
 app.use(express.static('public'));
 // initialise passport​
 // Add passport.authenticate(..)  to middleware stack for protected routes​
-app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+app.use('/api/movies',  moviesRouter);
 app.use('/api/upcomingMovies', upcomingRouter);
-app.use('/api/nowplayingMovies', passport.authenticate('jwt', {session: false}), nowplayingRouter);
+app.use('/api/nowplayingMovies', nowplayingRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/genres', genresRouter);
-app.use('/api/people',passport.authenticate('jwt', {session: false}), peopleRouter);
+app.use('/api/people', peopleRouter);
 //app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDoucment)); 
 app.use(errHandler);
 
