@@ -8,14 +8,19 @@ const expect = chai.expect;
 let db;
 let api;
 
+
 const users = [
   {
     username: "user1",
     password: "test1",
+    favourite :[], //602211
+    watchlist :[],
   },
   {
     username: "user2",
     password: "test2",
+    favourite :[],
+    watchlist :[],
   },
 ];
 
@@ -28,6 +33,13 @@ describe("Users endpoint", () => {
     db = mongoose.connection;
   });
 
+  // after(async () => {
+  //   try {
+  //     await db.dropDatabase();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 
   beforeEach(async () => {
     try {
@@ -61,20 +73,34 @@ describe("Users endpoint", () => {
   });
 
   describe("POST / ", () => {
-    it("should return a 401 status with a simple password", (done) => {
+    it("should return a 401 status with a invaild password", () => {
       request(api)
         .post("/api/users?action=register")
         .send({
-          username: "WWT",
-          password: "marc",
+          username: "jcy",
+          password: "123456",
         })
         .expect(200)
         .end((err, res) => {
+          console.log(res.body.msg);
           expect(res.body.msg).to.equal("The password is too simple");
-          done();
         });
     });
-    it("should return a 201 status and create successfully", (done) => {
+    it("should return a 401 status with a right uername but a wrong password", () => {
+      request(api)
+        .post("/api/users?action=register")
+        .send({
+          username: "user1",
+          password: "test2",
+        })
+        .expect(200)
+        .end((err, res) => {
+          // console.log(res.body.msg);
+          expect(res.body.msg).to.equal(undefined);
+        });
+    });
+
+    it("should return a 201 status and create successfully", () => {
       request(api)
         .post("/api/users?action=register")
         .send({
@@ -82,157 +108,122 @@ describe("Users endpoint", () => {
           password: "test3",
         })
         .expect(201)
-        .end((err, res) => {
+        .end((err,res) => {
+          // console.log(res);
           expect(res.body.msg).to.equal("Successful created new user.");
-          done();
         });
     });
-    after(() => {
-      return request(api)
-        .get("/api/users")
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(200)
-        .then((res) => {
-          expect(res.body).to.be.a("array");
-          expect(res.body.length).to.equal(3);
-          let result = res.body.map((user) => user.username);
-          expect(result).to.have.members(["user1", "user2", "user3"]);
-        });
-    });
+
   });
 
-  describe("GET / favourites", () => {
-    it("should add movie to favourite", (done) => {
-      request(api)
-        .post("/api/users/user1/favourites")
-        .send({
-          "id": 590706
-        })
-        .expect("Content-Type", /json/)
-        .expect(201)
-        .end((err, res) => {
-          expect(res.body.favourites.length).to.equal(1);
-          done();
-        })
-    });
+  
 
-    it("should return a 401 status with err msg", (done) => {
-      request(api)
-        .post("/api/users/user1/favourites")
-        .send({
-          "id": 590706
-        })
-        .expect("Content-Type", /json/)
-        .end(() => {
-          request(api)
-            .post("/api/users/user1/favourites")
-            .send({
-              "id": 590706
-            })
-            .expect("Content-Type", /json/)
-            .expect(401)
-            .end((err, res) => {
-              expect(res.body.msg).to.equal("The movie has appeared");
-              done();
-            })
-        });
-    });
+});
 
-    it("should get favourite movie", (done) => {
-      request(api)
-        .post("/api/users/user1/favourites")
-        .send({
-          "id": 590706
-        })
-        .expect("Content-Type", /json/)
-        .end(() => {
-          request(api)
-            .get("/api/users/user1/favourites")
-            .expect("Content-Type", /json/)
-            .expect(200)
-            .end((err, res) => {
-              expect(res.body[0].id).to.equal(590706);
-              done();
-            })
-        });
+describe("Users /favourite endpoint", () => {
+  before(() => {
+    mongoose.connect(process.env.mongoDB, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
+    db = mongoose.connection;
   });
 
-  describe("GET / watchlist", () => {
-    it("should add upcomingmovie to watchlist", (done) => {
-      request(api)
-        .post("/api/users/user1/watchlist")
-        .send({
-          "id": 464052
-        })
-        .expect("Content-Type", /json/)
-        .expect(201)
-        .end((err, res) => {
-          expect(res.body.watchList.length).to.equal(1);
-          done();
-        })
-    });
 
-    it("should return a 401 status with err msg", (done) => {
-      request(api)
-        .post("/api/users/user1/watchlist")
-        .send({
-          "id": 464052
-        })
-        .expect("Content-Type", /json/)
-        .end(() => {
-          request(api)
-            .post("/api/users/user1/watchlist")
-            .send({
-              "id": 464052
-            })
-            .expect("Content-Type", /json/)
-            .expect(401)
-            .end((err, res) => {
-              expect(res.body.msg).to.equal("The movie has appeared");
-              done();
-            })
-        });
-    });
+  beforeEach(async () => {
+    try {
+      api = require("../../../../index");
+      await User.deleteMany({});
+      await User.collection.insertMany(users);
+    } catch (err) {
+      console.error(`failed to Load user Data: ${err}`);
+    }
+  });
+  afterEach(() => {
+    api.close();
+    delete require.cache[require.resolve("../../../../index")];
+  });
 
-    it("should get watchlist movie", (done) => {
-      request(api)
-        .post("/api/users/user1/watchlist")
-        .send({
-          "id": 464052
-        })
-        .expect("Content-Type", /json/)
-        .end(() => {
-          request(api)
-            .get("/api/users/user1/watchlist")
-            .expect("Content-Type", /json/)
-            .expect(200)
-            .end((err, res) => {
-              expect(res.body.length).to.equal(1);
-              done();
-            })
-        });
-    });
+describe("GET /users/ username/favourites ", () => {
+  it("should return the users favourites movies and a status 201", () => {
+    request(api)
+      .get(`/api/users/user1/favourites`)
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body).to.be.a("array");
+        expect(res.body.length).to.equal(0); 
+      });
+  });
+});
 
-    it("should delete watchlist movie", (done) => {
-      request(api)
-        .post("/api/users/user1/watchlist")
-        .send({
-          "id": 464052
-        })
-        .expect("Content-Type", /json/)
-        .end(() => {
-          request(api)
-            .delete("/api/users/user1/watchlist")
-            .expect("Content-Type", /json/)
-            .expect(200)
-            .end((err, res) => {
-              expect(res.body.message).to.equal("success delete from watch list");
-              done();
-            })
-        });
+//post a movie to favourites
+describe("POST /users /username /favourites ", () => {
+it("should return a 401 status with a invaild movie id", () => {
+  request(api)
+    .post(`/api/users/user1/favourites`)//?action=register
+    .send({
+      id: "602211",
     });
+    request(api)
+    .post(`/api/users/user1/favourites`)//?action=register
+    .send({
+      id: "602211",
+    })
+    .expect(401);
+});
+it("should return a 201 status with a vaild movie id", () => {
+  request(api)
+    .post(`/api/users/user1/favourites`)
+    .send({
+      id: "729648",//sample _id "5ffccf054606a41fc7ca85d3
+    })
+    .expect(201);
+    });
+});
 
+
+
+describe("GET /users/ username/watchlist ", () => {
+it("should return the users watchlist movies and a status 200", () => {
+  request(api)
+    .get(`/api/users/user2/watchlist`)
+    .set("Accept", "application/json")
+    .expect("Content-Type", /json/)
+    .expect(201)
+    .end((err, res) => {
+      console.log(res.body.msg);
+      expect(res.body).to.be.a("array");
+      expect(res.body.length).to.equal(0); 
+    });
+});
+});
+
+//post a movie to watchlist
+describe("POST /users /username /watchlist ", () => {
+  it("should return a 401 status with a invaild movie id", () => {
+    request(api)
+      .post(`/api/users/user2/watchlist?action=register`)
+      .send({
+        id: "729648",
+      });
+      request(api)
+      .post(`/api/users/user2/watchlist?action=register`)
+      .send({
+        id: "729648",
+      })
+      .expect(401);
+      });
+
+  it("should return a 201 status with a vaild watchlist movie id", () => {
+    request(api)
+      .post(`/api/users/user2/watchlist?action=register`)
+      .send({
+        id: "602211",//sample movie id _id "5ffc57ac6243480c00f3d5e7"
+      })
+      .expect(201);
+      
+      });
   });
 });
