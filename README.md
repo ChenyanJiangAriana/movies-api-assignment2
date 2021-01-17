@@ -20,21 +20,21 @@ Name: Chenyan Jiang
 
 ## Installation Requirements
 
-Describe what needs to be on the machine to run the API (Node v?, NPM, MongoDB instance, any other 3rd party software not in the package.json). 
+"nodemon": "^2.0.6",
+"express": "^4.17.1",
+"express-session": "^1.17.1",
+"jsonwebtoken": "^8.5.1",
+"loglevel": "^1.7.1",
+"mongoose": "^5.11.7",
+"passport": "^0.4.1",
+"passport-jwt": "^4.0.0"
 
+In package.json, the dependency softwares and their version are recorded. 
 
-
-Describe getting/installing the software, perhaps:
+Then run the code in terminal to install
 
 ```bat
-git clone http:\myrepo.git
-```
-
-followed by installation
-
-```bat
-git install
-
+npm install
 ```
 
 ## API Configuration
@@ -98,7 +98,7 @@ export const getMovies = () => {
 
 # Assignment 2 - Agile Software Practice.
 
-Name: ... your name ...
+Name: ChenyanJiang
 
 ## Target Web API.
 

@@ -12,7 +12,7 @@ const sampleMovie = {
 describe("Movies endpoint", () => {
 
   beforeEach( function(done){
-    this.timeout(6000)
+    this.timeout(10000)
     try {
       api = require("../../../../index");
     } catch (err) {
