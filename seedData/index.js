@@ -3,8 +3,10 @@ import movieModel from '../api/movies/movieModel';
 import upcomingModel from '../api/upcomingMovies/upcomingModel';
 import nowplayingModel from '../api/nowplayingMovies/nowplayingModel';
 import peopleModel from '../api/people/peopleModel';
+import topratedModel from '../api/topratedMovies/topratedModel';
 import { movies } from './movies.js';
-import { getUpcomingMovies, getNowPlayingMovies, getActor, getActors } from '../api/tmdb-api';
+import {topratedMovies} from './toprated.js';
+import { getUpcomingMovies, getNowPlayingMovies, getActor, getActors,getTopratedMovies} from '../api/tmdb-api';
 
 const users = [
   {
@@ -53,6 +55,31 @@ export async function loadUsers() {
     }
   }
   
+  // export async function loadTopratedMovies() {
+  //   console.log('load top rated movies data');
+  //   try {
+  //     getTopratedMovies().then(async res => {
+  //     await topratedModel.deleteMany();
+  //     await topratedModel.collection.insertMany(res);
+  //     console.info(`${res.length} Top rated Movies were successfully stored.`);
+  //     })
+  // } catch (err) {
+  //     console.error(`failed to Load top rated movie Data: ${err}`);
+  //   }
+  // }
+  export async function loadTopratedMovies() {
+    console.log('load top rated movies data');
+    console.log(topratedMovies.length);
+    try {
+      await topratedModel.deleteMany();
+      await topratedModel.collection.insertMany(topratedMovies);
+      console.info(`${topratedMovies.length} Top rated Movies were successfully stored.`);
+  } catch (err) {
+      console.error(`failed to Load top rated movie Data: ${err}`);
+    }
+  }
+
+
   export async function loadNowplayingMovies() {
     console.log('load nowplayingmovies');
     try {
@@ -78,4 +105,6 @@ export async function loadUsers() {
       console.error(`failed to Load actor Data: ${err}`);
     }
   }
+
+
 
