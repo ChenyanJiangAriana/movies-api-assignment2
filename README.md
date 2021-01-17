@@ -3,21 +3,26 @@
 Agile assignment 2 final version 
 # Assignment 2 - Web API.
 
-Name: Your Name
+Name: Chenyan Jiang
 
 ## Features.
 
 ...... A bullet-point list of the ADDITIONAL features you have implemented in the API **THAT WERE NOT IN THE LABS** ......,
  
- + Feature 1 - .... a statement of its purpose/objective ..... 
- + Feature 2 - .......
- + Feature 3 = ......
+ + Feature 1 -  get a list of nowplaying movies
+ + Feature 2 -  get single nowplaying movie detailed information
+ + Feature 3 -  get a list of upcoming movies
+ + Feature 4 -  get one upcoming movie and show its detailed information
+ + Feature 5 -  get a list of people which is actor in film
+ + Feature 6 -  get one actor's detail information
  + etc
  + etc
 
 ## Installation Requirements
 
 Describe what needs to be on the machine to run the API (Node v?, NPM, MongoDB instance, any other 3rd party software not in the package.json). 
+
+
 
 Describe getting/installing the software, perhaps:
 
@@ -38,10 +43,11 @@ REMEMBER: DON'T PUT YOUR OWN USERNAMES/PASSWORDS/AUTH KEYS IN THE README OR ON G
 ```bat
 NODE_ENV=development
 PORT=8080
-HOST=
-mongoDB=YourMongoURL
-seedDb=true
-secret=YourJWTSecret
+HOST=localhost
+TMDB_KEY=TMDBAPIKEY
+mongoDB=MongDBURl
+SEED_DB=true
+SECRET=JWTSECRET
 ```
 
 
@@ -115,7 +121,7 @@ Name: ... your name ...
 
 ..... Specify the URLs for the staging and production deployments of your web API, e.g.
 
-+ https://movies-api-trial-staging.herokuapp.com/ - Staging deployment
++ http://agile-assignment.herokuapp.com/ - Staging deployment
 + https://movies-api-production.herokuapp.com/ - Production
 
 .... Show a screenshots from the overview page for the two Heroku apps e,g,
