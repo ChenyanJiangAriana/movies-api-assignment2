@@ -8,10 +8,14 @@ import genresRouter from './api/genres';
 import session from 'express-session';
 import passport from './authenticate';
 import loglevel from 'loglevel';
-import {loadUsers, loadMovies, loadUpcomingMovies, loadNowplayingMovies, loadPeople} from './seedData';
+import {loadUsers, loadMovies, loadUpcomingMovies,loadNowplayingMovies, loadPeople} from './seedData';
 import upcomingRouter from './api/upcomingMovies';
 import nowplayingRouter from './api/nowplayingMovies';
 import peopleRouter from './api/people';
+
+//import swaggerUi from 'swagger-ui-express';import * as swaggerDoucment from './swagger.json';import serverless from 'serverless-http';
+
+
 dotenv.config();
 
 if (process.env.NODE_ENV === 'test') {
@@ -61,6 +65,7 @@ app.use('/api/nowplayingMovies', passport.authenticate('jwt', {session: false}),
 app.use('/api/users', usersRouter);
 app.use('/api/genres', genresRouter);
 app.use('/api/people',passport.authenticate('jwt', {session: false}), peopleRouter);
+//app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDoucment)); 
 app.use(errHandler);
 
 let server = app.listen(port, () => {

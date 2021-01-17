@@ -4,7 +4,7 @@ import upcomingModel from '../api/upcomingMovies/upcomingModel';
 import nowplayingModel from '../api/nowplayingMovies/nowplayingModel';
 import peopleModel from '../api/people/peopleModel';
 import { movies } from './movies.js';
-import { getUpcomingMovies, getNowPlayingMovies, getActor, getActors } from '../api/tmdb-api';
+import { getUpcomingMovies, getNowPlayingMovies, getActor, getActors} from '../api/tmdb-api';
 
 const users = [
   {
@@ -52,7 +52,7 @@ export async function loadUsers() {
       console.error(`failed to Load upcomingmovie Data: ${err}`);
     }
   }
-  
+
   export async function loadNowplayingMovies() {
     console.log('load nowplayingmovies');
     try {
@@ -78,4 +78,6 @@ export async function loadUsers() {
       console.error(`failed to Load actor Data: ${err}`);
     }
   }
+
+
 
