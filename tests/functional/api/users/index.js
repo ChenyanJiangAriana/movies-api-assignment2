@@ -159,7 +159,7 @@ describe("Users endpoint", () => {
     });
   });
 
-  describe("GET / watchlist", () => {
+  describe("GET / watchlist", (done) => {
     it("should add upcomingmovie to watchlist", () => {
       request(api)
         .post("/api/users/user1/watchlist")
@@ -170,10 +170,11 @@ describe("Users endpoint", () => {
         .expect(201)
         .end((err, res) => {
           expect(res.body.watchList.length).to.equal(1);
+          done();
         })
     });
 
-    it("should return a 401 status with err msg", () => {
+    it("should return a 401 status with err msg", (done) => {
       request(api)
         .post("/api/users/user1/watchlist")
         .send({
@@ -190,11 +191,12 @@ describe("Users endpoint", () => {
             .expect(401)
             .end((err, res) => {
               expect(res.body.msg).to.equal("The movie has appeared");
+              done();
             })
         });
     });
 
-    it("should get watchlist movie", () => {
+    it("should get watchlist movie", (done) => {
       request(api)
         .post("/api/users/user1/watchlist")
         .send({
@@ -208,11 +210,12 @@ describe("Users endpoint", () => {
             .expect(200)
             .end((err, res) => {
               expect(res.body.length).to.equal(1);
+              done();
             })
         });
     });
 
-    it("should delete watchlist movie", () => {
+    it("should delete watchlist movie", (done) => {
       request(api)
         .post("/api/users/user1/watchlist")
         .send({
@@ -226,6 +229,7 @@ describe("Users endpoint", () => {
             .expect(200)
             .end((err, res) => {
               expect(res.body.message).to.equal("success delete from watch list");
+              done();
             })
         });
     });
